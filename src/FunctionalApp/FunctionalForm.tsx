@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { ErrorMessage } from "../ErrorMessage";
+import { TSUserInfo, InputProps, TSEventElement} from "../types";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
@@ -6,9 +8,49 @@ const emailErrorMessage = "Email is Invalid";
 const cityErrorMessage = "State is Invalid";
 const phoneNumberErrorMessage = "Invalid Phone Number";
 
-export const FunctionalForm = () => {
+const TextInput =({type, label, inputProps, placeholder}:{
+  label:string;
+  type: string;
+  placeholder: string;
+  inputProps: InputProps;
+})=>{
+  return(  <div>
+  <label>{label}</label>
+  <input type={type} placeholder={placeholder} {...inputProps}/>
+ </div> )
+}
+
+
+
+
+export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
+
+
+  const [inputFirstName, setInputFirstName] = useState("");
+
+  const [inputLastName, setInputLastName] = useState("");
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputCity, setInputCity] = useState("");
+  const [inputPhoneNumber, setInputPhoneNumber] = useState(["", "", "", ""]);
+
+
   return (
-    <form>
+    <form onSubmit={(e)=>{
+      e.preventDefault();
+      getUserInformation({
+        firstName:inputFirstName,
+        lastName:inputLastName,
+        email:inputEmail,
+        city:inputCity,
+        phone:`${inputPhoneNumber[0]} ${inputPhoneNumber[1]} ${inputPhoneNumber[2]} ${inputPhoneNumber[3]}`
+      })
+      setInputFirstName("");
+      setInputLastName("");
+      setInputEmail("");
+      setInputCity("");
+      setInputPhoneNumber(["", "", "", ""]);
+      
+      }}>
       <u>
         <h3>User Information Form</h3>
       </u>
