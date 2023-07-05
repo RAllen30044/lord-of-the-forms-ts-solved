@@ -1,4 +1,4 @@
-import { ComponentProps, FormEvent } from "react";
+
 
 export type UserInformation = {
   firstName: string;
@@ -9,10 +9,9 @@ export type UserInformation = {
 };
 export type State = { userInformation: UserInformation | null };
 
-export type InputProps = ComponentProps<"input">;
-export type TSEventElement = {
-  e: React.FormEvent<HTMLFormElement>;
-};
+export type PhoneInputState=[string,string, string, string]
+
+
 export type TSUserInfo = {
   getUserInformation: (userInformation: UserInformation) => void;
 };

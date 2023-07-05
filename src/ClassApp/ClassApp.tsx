@@ -8,7 +8,7 @@ export const defaultUser: UserInformation = {
   email: "default@default.com",
   firstName: "Default",
   lastName: "Default",
-  phone: "1234567",
+  phone: "12344556767",
   city: "Hobbiton",
 };
 

@@ -9,7 +9,7 @@ export const FunctionalApp = () => {
   return (
     <>
       <h2>Functional</h2>
-      <ProfileInformation userData={defaultUser} />
+      <ProfileInformation userData={userInformation ?? defaultUser} />
       <FunctionalForm getUserInformation={(userInformation)=>{
         setUserInformation(userInformation)
       }} />
