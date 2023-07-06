@@ -1,6 +1,6 @@
 import { ProfileInformation } from "../ProfileInformation";
 import { FunctionalForm } from "./FunctionalForm";
-import { defaultUser } from "../ClassApp/ClassApp";
+import { defaultUser } from "../types";
 import { UserInformation } from "../types";
 import{useState} from "react";
 

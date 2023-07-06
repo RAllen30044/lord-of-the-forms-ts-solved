@@ -1,16 +1,9 @@
 import { Component } from "react";
 import { ClassForm } from "./ClassForm";
-import { UserInformation,State } from "../types";
+import { defaultUser,State } from "../types";
 import { ProfileInformation } from "../ProfileInformation";
 
 
-export const defaultUser: UserInformation = {
-  email: "default@default.com",
-  firstName: "Default",
-  lastName: "Default",
-  phone: "12344556767",
-  city: "Hobbiton",
-};
 
 export class ClassApp extends Component<Record<string, never>, State> {
   render() {
