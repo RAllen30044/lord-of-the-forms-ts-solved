@@ -1,6 +1,9 @@
 import { useState, ChangeEventHandler, useRef } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { TSUserInfo, PhoneInputState } from "../types";
+import { isEmailValid } from "../utils/validations";
+import { allCities } from "../utils/all-cities";
+import { capitalize } from "../utils/transformations";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
@@ -20,6 +23,11 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
     "",
     "",
   ]);
+
+  const isLastNameValid = inputLastName.length < 2;
+  const isFirstNameValid = inputFirstName.length < 2;
+  const isCityValid = allCities.includes(inputCity);
+  const isPhoneNumberValid = inputPhoneNumber.join("").length === 7;
 
   const ref0 = useRef<HTMLInputElement>(null);
   const ref1 = useRef<HTMLInputElement>(null);
@@ -80,11 +88,14 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           placeholder="Bilbo"
           value={inputFirstName}
           onChange={({ target: { value } }) => {
-            setInputFirstName(value);
+            setInputFirstName(capitalize(value));
           }}
         />
       </div>
-      <ErrorMessage message={firstNameErrorMessage} show={true} />
+
+      {isFirstNameValid && (
+        <ErrorMessage message={firstNameErrorMessage} show={true} />
+      )}
 
       {/* last name input */}
       <div className="input-wrap">
@@ -93,12 +104,13 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           placeholder="Baggins"
           value={inputLastName}
           onChange={({ target: { value } }) => {
-            setInputLastName(value);
+            setInputLastName(capitalize(value));
           }}
         />
       </div>
-      <ErrorMessage message={lastNameErrorMessage} show={true} />
-
+      {isLastNameValid && (
+        <ErrorMessage message={lastNameErrorMessage} show={true} />
+      )}
       {/* Email Input */}
       <div className="input-wrap">
         <label>{"Email"}:</label>
@@ -110,8 +122,9 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           }}
         />
       </div>
-      <ErrorMessage message={emailErrorMessage} show={true} />
-
+      {isEmailValid(inputEmail) || (
+        <ErrorMessage message={emailErrorMessage} show={true} />
+      )}
       {/* City Input */}
       <div className="input-wrap">
         <label>{"City"}:</label>
@@ -119,11 +132,11 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           placeholder="Hobbiton"
           value={inputCity}
           onChange={({ target: { value } }) => {
-            setInputCity(value);
+            setInputCity(capitalize(value));
           }}
         />
       </div>
-      <ErrorMessage message={cityErrorMessage} show={true} />
+      {isCityValid || <ErrorMessage message={cityErrorMessage} show={true} />}
 
       <div className="input-wrap">
         <label htmlFor="phone">Phone:</label>
@@ -169,9 +182,9 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           />
         </div>
       </div>
-
-      <ErrorMessage message={phoneNumberErrorMessage} show={true} />
-
+      {isPhoneNumberValid || (
+        <ErrorMessage message={phoneNumberErrorMessage} show={true} />
+      )}
       <input type="submit" value="Submit" />
     </form>
   );
