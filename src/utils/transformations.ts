@@ -10,7 +10,8 @@ export const capitalize = (name: string) => {
   return capitlizeFirstLetter + keepLower;
 };
 
-export const formatPhoneNumber = () => {
+export const formatPhoneNumber = (phoneNumber:string[]) => {
   // todo: build this function
   // `formatPhoneNumber("1234567")` should be `"12-34-56-7"`
+  return phoneNumber.join("-");
 };

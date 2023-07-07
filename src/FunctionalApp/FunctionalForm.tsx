@@ -1,15 +1,15 @@
 import { useState, ChangeEventHandler, useRef } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { TSUserInfo, PhoneInputState } from "../types";
-import { isEmailValid } from "../utils/validations";
+import { isEmailValid,isPhoneNumberValid } from "../utils/validations";
 import { allCities } from "../utils/all-cities";
-import { capitalize } from "../utils/transformations";
+import { capitalize, formatPhoneNumber } from "../utils/transformations";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
 const emailErrorMessage = "Email is Invalid";
 const cityErrorMessage = "City is Invalid";
-const phoneNumberErrorMessage = "Invalid Phone Number";
+ const phoneNumberErrorMessage = "Invalid Phone Number";
 
 export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
   const [inputFirstName, setInputFirstName] = useState("");
@@ -27,7 +27,12 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
   const isLastNameValid = inputLastName.length < 2;
   const isFirstNameValid = inputFirstName.length < 2;
   const isCityValid = allCities.includes(capitalize(inputCity));
-  const isPhoneNumberValid = inputPhoneNumber.join("").length === 7;
+
+
+
+
+
+
 
   const ref0 = useRef<HTMLInputElement>(null);
   const ref1 = useRef<HTMLInputElement>(null);
@@ -59,6 +64,9 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       setInputPhoneNumber(newState);
     };
 
+
+console.log(isPhoneNumberValid(inputPhoneNumber));
+
   return (
     <form
       onSubmit={(e) => {
@@ -67,8 +75,8 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           firstName: capitalize(inputFirstName),
           lastName: capitalize(inputLastName),
           email: inputEmail,
-          city: inputCity,
-          phone: `${inputPhoneNumber[0]}-${inputPhoneNumber[1]}-${inputPhoneNumber[2]}-${inputPhoneNumber[3]}`,
+          city: capitalize(inputCity),
+          phone: formatPhoneNumber(inputPhoneNumber)
         });
         setInputFirstName("");
         setInputLastName("");
@@ -104,7 +112,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           placeholder="Baggins"
           value={inputLastName}
           onChange={({ target: { value } }) => {
-            setInputLastName(capitalize(value));
+            setInputLastName(value);
           }}
         />
       </div>
@@ -132,7 +140,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           placeholder="Hobbiton"
           value={inputCity}
           onChange={({ target: { value } }) => {
-            setInputCity(capitalize(value));
+            setInputCity(value);
           }}
         />
       </div>
@@ -182,7 +190,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           />
         </div>
       </div>
-      {isPhoneNumberValid || (
+      {isPhoneNumberValid(inputPhoneNumber) || (
         <ErrorMessage message={phoneNumberErrorMessage} show={true} />
       )}
       <input type="submit" value="Submit" />
