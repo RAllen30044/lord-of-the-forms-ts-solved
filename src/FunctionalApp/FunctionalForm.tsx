@@ -26,7 +26,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
 
   const isLastNameValid = inputLastName.length < 2;
   const isFirstNameValid = inputFirstName.length < 2;
-  const isCityValid = allCities.includes(inputCity);
+  const isCityValid = allCities.includes(capitalize(inputCity));
   const isPhoneNumberValid = inputPhoneNumber.join("").length === 7;
 
   const ref0 = useRef<HTMLInputElement>(null);
@@ -64,8 +64,8 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       onSubmit={(e) => {
         e.preventDefault();
         getUserInformation({
-          firstName: inputFirstName,
-          lastName: inputLastName,
+          firstName: capitalize(inputFirstName),
+          lastName: capitalize(inputLastName),
           email: inputEmail,
           city: inputCity,
           phone: `${inputPhoneNumber[0]}-${inputPhoneNumber[1]}-${inputPhoneNumber[2]}-${inputPhoneNumber[3]}`,
@@ -88,7 +88,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
           placeholder="Bilbo"
           value={inputFirstName}
           onChange={({ target: { value } }) => {
-            setInputFirstName(capitalize(value));
+            setInputFirstName(value);
           }}
         />
       </div>
