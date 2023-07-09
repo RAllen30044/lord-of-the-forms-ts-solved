@@ -4,19 +4,13 @@ export function isEmailValid(emailAddress: string) {
   return !!emailAddress.match(regex);
 }
 export function isPhoneNumberValid(phoneNumber: string[]) {
-    const numbersToCheck = "0123456789".split("");
-    const numberString = phoneNumber.join("").split("");
+    const regex=/[a-zA-Z]/;
+    const numberString = phoneNumber.join("")
  
-    for (const number of numberString) {
-      if (numbersToCheck.includes(number)&& phoneNumber.join("").length === 7) {
-        console.log(numberString);
-        console.log(number);
-        return true;
-      } else{
-        return false;
-      }
-    
-    }
-    return false;
+
+    return !regex.test(numberString) && numberString.length===7;
+ 
    
-  }
+
+}
+1

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { ErrorMessage } from "../ErrorMessage";
+import { TSUserInfo } from "../types";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
@@ -7,7 +8,7 @@ const emailErrorMessage = "Email is Invalid";
 const cityErrorMessage = "State is Invalid";
 const phoneNumberErrorMessage = "Invalid Phone Number";
 
-export class ClassForm extends Component {
+export class ClassForm extends Component<TSUserInfo> {
   render() {
     return (
       <form>

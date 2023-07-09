@@ -1,6 +1,6 @@
 import { ProfileInformation } from "../ProfileInformation";
 import { FunctionalForm } from "./FunctionalForm";
-import { defaultUser } from "../types";
+
 import { UserInformation } from "../types";
 import{useState} from "react";
 
@@ -9,7 +9,7 @@ export const FunctionalApp = () => {
   return (
     <>
       <h2>Functional</h2>
-      <ProfileInformation userData={userInformation ?? defaultUser} />
+      <ProfileInformation userData={userInformation } />
       <FunctionalForm getUserInformation={(userInformation)=>{
         setUserInformation(userInformation)
       }} />

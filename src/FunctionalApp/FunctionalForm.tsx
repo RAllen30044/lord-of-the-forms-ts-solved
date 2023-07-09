@@ -1,7 +1,7 @@
 import { useState, ChangeEventHandler, useRef } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { TSUserInfo, PhoneInputState } from "../types";
-import { isEmailValid,isPhoneNumberValid } from "../utils/validations";
+import { isEmailValid, isPhoneNumberValid } from "../utils/validations";
 import { allCities } from "../utils/all-cities";
 import { capitalize, formatPhoneNumber } from "../utils/transformations";
 
@@ -9,7 +9,8 @@ const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
 const emailErrorMessage = "Email is Invalid";
 const cityErrorMessage = "City is Invalid";
- const phoneNumberErrorMessage = "Invalid Phone Number";
+const phoneNumberErrorMessage = "Invalid Phone Number";
+
 
 export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
   const [inputFirstName, setInputFirstName] = useState("");
@@ -24,14 +25,18 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
     "",
   ]);
 
-  const isLastNameValid = inputLastName.length < 2;
-  const isFirstNameValid = inputFirstName.length < 2;
+  const [isSubmitted, setIsSubmitted]= useState(false);
+
+  const isLastNameValid = inputLastName.length >1;
+  const isFirstNameValid = inputFirstName.length > 1;
   const isCityValid = allCities.includes(capitalize(inputCity));
 
+  const shouldShowFirstNameError = isSubmitted && !isFirstNameValid;
+  const shouldShowLastNameError = isSubmitted && !isLastNameValid;
+  const shouldShowInputEmailError = isSubmitted && !isEmailValid(inputEmail);
+  const shouldShowInputPhoneNumberError = isSubmitted && !isPhoneNumberValid(inputPhoneNumber);
 
-
-
-
+  const shouldShowCityInputError = isSubmitted && !isCityValid;
 
 
   const ref0 = useRef<HTMLInputElement>(null);
@@ -52,7 +57,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
         currentMaxLength === getValue.length && nextRef?.current;
       const shouldGotoPrevRef = getValue.length === 0 && index !== 0;
       const newState = inputPhoneNumber.map((phoneInput, phoneInputIndex) =>
-        index === phoneInputIndex ? value : phoneInput
+        index === phoneInputIndex ? value.replace(/[^0-9]/g,'') : phoneInput
       ) as PhoneInputState;
       if (shouldGotoNextRef) {
         nextRef.current?.focus();
@@ -61,29 +66,42 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       if (shouldGotoPrevRef) {
         prevRef.current?.focus();
       }
+  
       setInputPhoneNumber(newState);
+      
     };
 
 
-console.log(isPhoneNumberValid(inputPhoneNumber));
 
   return (
     <form
       onSubmit={(e) => {
+
+
         e.preventDefault();
+          if(!isCityValid||!inputFirstName||!isLastNameValid||!isPhoneNumberValid(inputPhoneNumber)||!isEmailValid(inputEmail)){
+            alert("Bad Input data")
+            setIsSubmitted(true)
+          }else{
+
+        setIsSubmitted(false)
         getUserInformation({
           firstName: capitalize(inputFirstName),
           lastName: capitalize(inputLastName),
           email: inputEmail,
           city: capitalize(inputCity),
-          phone: formatPhoneNumber(inputPhoneNumber)
+          phone: formatPhoneNumber(inputPhoneNumber),
         });
         setInputFirstName("");
         setInputLastName("");
         setInputEmail("");
         setInputCity("");
         setInputPhoneNumber(["", "", "", ""]);
-      }}
+          }
+      }
+    
+    
+    }
     >
       <u>
         <h3>User Information Form</h3>
@@ -101,7 +119,7 @@ console.log(isPhoneNumberValid(inputPhoneNumber));
         />
       </div>
 
-      {isFirstNameValid && (
+      {shouldShowFirstNameError && (
         <ErrorMessage message={firstNameErrorMessage} show={true} />
       )}
 
@@ -116,7 +134,7 @@ console.log(isPhoneNumberValid(inputPhoneNumber));
           }}
         />
       </div>
-      {isLastNameValid && (
+      {shouldShowLastNameError && (
         <ErrorMessage message={lastNameErrorMessage} show={true} />
       )}
       {/* Email Input */}
@@ -130,7 +148,7 @@ console.log(isPhoneNumberValid(inputPhoneNumber));
           }}
         />
       </div>
-      {isEmailValid(inputEmail) || (
+      {shouldShowInputEmailError && (
         <ErrorMessage message={emailErrorMessage} show={true} />
       )}
       {/* City Input */}
@@ -144,7 +162,7 @@ console.log(isPhoneNumberValid(inputPhoneNumber));
           }}
         />
       </div>
-      {isCityValid || <ErrorMessage message={cityErrorMessage} show={true} />}
+      {shouldShowCityInputError && <ErrorMessage message={cityErrorMessage} show={true} />}
 
       <div className="input-wrap">
         <label htmlFor="phone">Phone:</label>
@@ -190,10 +208,12 @@ console.log(isPhoneNumberValid(inputPhoneNumber));
           />
         </div>
       </div>
-      {isPhoneNumberValid(inputPhoneNumber) || (
+      {shouldShowInputPhoneNumberError && (
         <ErrorMessage message={phoneNumberErrorMessage} show={true} />
       )}
-      <input type="submit" value="Submit" />
+    
+        <input type="submit" value="Submit"  />
+ 
     </form>
   );
 };
