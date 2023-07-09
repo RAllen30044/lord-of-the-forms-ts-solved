@@ -5,13 +5,15 @@ export const capitalize = (name: string) => {
   const firstLetter = name.slice(0, 1);
   const capitlizeFirstLetter = firstLetter.toUpperCase();
   const keepLower = newName.toLowerCase();
- 
 
   return capitlizeFirstLetter + keepLower;
 };
 
-export const formatPhoneNumber = (phoneNumber:string[]) => {
+export const formatPhoneNumber = (phoneNumber: string[]) => {
   // todo: build this function
   // `formatPhoneNumber("1234567")` should be `"12-34-56-7"`
   return phoneNumber.join("-");
+};
+export const preventKeyingNumbers = (value: string) => {
+  return value.replace(/\d/, "");
 };

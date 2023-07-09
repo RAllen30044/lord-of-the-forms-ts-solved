@@ -1,9 +1,20 @@
 import { useState, ChangeEventHandler, useRef } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { TSUserInfo, PhoneInputState } from "../types";
-import { isEmailValid, isPhoneNumberValid } from "../utils/validations";
-import { allCities } from "../utils/all-cities";
-import { capitalize, formatPhoneNumber } from "../utils/transformations";
+import {
+  isEmailValid,
+  isPhoneNumberValid,
+  isCityValid,
+  isFirstNameValid,
+  isLastNameValid,
+} from "../utils/validations";
+
+import {
+  capitalize,
+  formatPhoneNumber,
+  preventKeyingNumbers,
+} from "../utils/transformations";
+import { FunctionalInputProps } from "./FuntionalInputProps";
 
 const firstNameErrorMessage = "First name must be at least 2 characters long";
 const lastNameErrorMessage = "Last name must be at least 2 characters long";
@@ -13,7 +24,6 @@ const phoneNumberErrorMessage = "Invalid Phone Number";
 
 export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
   const [inputFirstName, setInputFirstName] = useState("");
-
   const [inputLastName, setInputLastName] = useState("");
   const [inputEmail, setInputEmail] = useState("");
   const [inputCity, setInputCity] = useState("");
@@ -23,20 +33,17 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
     "",
     "",
   ]);
-
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const isLastNameValid = inputLastName.length > 1;
-  const isFirstNameValid = inputFirstName.length > 1;
-  const isCityValid = allCities.includes(capitalize(inputCity));
-
-  const shouldShowFirstNameError = isSubmitted && !isFirstNameValid;
-  const shouldShowLastNameError = isSubmitted && !isLastNameValid;
+  const shouldShowFirstNameError =
+    isSubmitted && !isFirstNameValid(inputFirstName);
+  const shouldShowLastNameError =
+    isSubmitted && !isLastNameValid(inputLastName);
   const shouldShowInputEmailError = isSubmitted && !isEmailValid(inputEmail);
   const shouldShowInputPhoneNumberError =
     isSubmitted && !isPhoneNumberValid(inputPhoneNumber);
 
-  const shouldShowCityInputError = isSubmitted && !isCityValid;
+  const shouldShowCityInputError = isSubmitted && !isCityValid(inputCity);
 
   const ref0 = useRef<HTMLInputElement>(null);
   const ref1 = useRef<HTMLInputElement>(null);
@@ -74,9 +81,9 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       onSubmit={(e) => {
         e.preventDefault();
         if (
-          !isCityValid ||
-          !inputFirstName ||
-          !isLastNameValid ||
+          !isCityValid(inputCity) ||
+          !isFirstNameValid(inputFirstName) ||
+          !isLastNameValid(inputLastName) ||
           !isPhoneNumberValid(inputPhoneNumber) ||
           !isEmailValid(inputEmail)
         ) {
@@ -105,13 +112,15 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
 
       {/* first name input */}
       <div className="input-wrap">
-        <label>{"First Name"}:</label>
-        <input
-          type="text"
-          placeholder="Bilbo"
-          value={inputFirstName}
-          onChange={({ target: { value } }) => {
-            setInputFirstName(value);
+        <FunctionalInputProps
+          label={"First Name"}
+          inputProps={{
+            type: "text",
+            placeholder: "Bilbo",
+            value: inputFirstName,
+            onChange: ({ target: { value } }) => {
+              setInputFirstName(preventKeyingNumbers(value));
+            },
           }}
         />
       </div>
@@ -122,13 +131,15 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
 
       {/* last name input */}
       <div className="input-wrap">
-        <label>{"Last Name"}:</label>
-        <input
-          type="text"
-          placeholder="Baggins"
-          value={inputLastName}
-          onChange={({ target: { value } }) => {
-            setInputLastName(value);
+        <FunctionalInputProps
+          label={"Last Name"}
+          inputProps={{
+            type: "text",
+            placeholder: "Baggins",
+            value: inputLastName,
+            onChange: ({ target: { value } }) => {
+              setInputLastName(value);
+            },
           }}
         />
       </div>
@@ -137,13 +148,15 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       )}
       {/* Email Input */}
       <div className="input-wrap">
-        <label>{"Email"}:</label>
-        <input
-          type="text"
-          placeholder="bilbo-baggins@adventurehobbits.net"
-          value={inputEmail}
-          onChange={({ target: { value } }) => {
-            setInputEmail(value);
+        <FunctionalInputProps
+          label={"Email"}
+          inputProps={{
+            type: "text",
+            placeholder: "Bilbo-baggins@adventurehobbits.net",
+            value: inputEmail,
+            onChange: ({ target: { value } }) => {
+              setInputEmail(value);
+            },
           }}
         />
       </div>
@@ -152,19 +165,20 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       )}
       {/* City Input */}
       <div className="input-wrap">
-        <label>{"City"}:</label>
-        <input
-          type="text"
-          placeholder="Hobbiton"
-          list="cities"
-          value={inputCity}
-          onChange={({ target: { value } }) => {
-            setInputCity(value);
+        <FunctionalInputProps
+          label={"City"}
+          inputProps={{
+            type: "text",
+            placeholder: "Hobbiton",
+            value: inputCity,
+            list: "cities",
+            onChange: ({ target: { value } }) => {
+              setInputCity(preventKeyingNumbers(value));
+            },
           }}
-          
         />
       </div>
-      
+
       {shouldShowCityInputError && (
         <ErrorMessage message={cityErrorMessage} show={true} />
       )}

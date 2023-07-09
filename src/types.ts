@@ -1,4 +1,4 @@
-
+import { ComponentProps } from "react";
 
 export type UserInformation = {
   firstName: string;
@@ -9,8 +9,7 @@ export type UserInformation = {
 };
 export type State = { userInformation: UserInformation | null };
 
-export type PhoneInputState=[string,string, string, string]
-
+export type PhoneInputState = [string, string, string, string];
 
 export const defaultUser: UserInformation = {
   email: "default@default.com",
@@ -23,3 +22,5 @@ export const defaultUser: UserInformation = {
 export type TSUserInfo = {
   getUserInformation: (userInformation: UserInformation) => void;
 };
+
+export type InputProps = ComponentProps<"input">;
