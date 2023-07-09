@@ -26,7 +26,7 @@ export class ClassForm extends Component<TSUserInfo> {
         {/* last name input */}
         <div className="input-wrap">
           <label>{"Last Name"}:</label>
-          <input placeholder="Baggins" />
+          <input placeholder="Baggins"  />
         </div>
         <ErrorMessage message={lastNameErrorMessage} show={true} />
 
@@ -40,7 +40,7 @@ export class ClassForm extends Component<TSUserInfo> {
         {/* City Input */}
         <div className="input-wrap">
           <label>{"City"}:</label>
-          <input placeholder="Hobbiton" />
+          <input placeholder="Hobbiton"  list="cities"/>
         </div>
         <ErrorMessage message={cityErrorMessage} show={true} />
 

@@ -11,7 +11,6 @@ const emailErrorMessage = "Email is Invalid";
 const cityErrorMessage = "City is Invalid";
 const phoneNumberErrorMessage = "Invalid Phone Number";
 
-
 export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
   const [inputFirstName, setInputFirstName] = useState("");
 
@@ -25,19 +24,19 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
     "",
   ]);
 
-  const [isSubmitted, setIsSubmitted]= useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const isLastNameValid = inputLastName.length >1;
+  const isLastNameValid = inputLastName.length > 1;
   const isFirstNameValid = inputFirstName.length > 1;
   const isCityValid = allCities.includes(capitalize(inputCity));
 
   const shouldShowFirstNameError = isSubmitted && !isFirstNameValid;
   const shouldShowLastNameError = isSubmitted && !isLastNameValid;
   const shouldShowInputEmailError = isSubmitted && !isEmailValid(inputEmail);
-  const shouldShowInputPhoneNumberError = isSubmitted && !isPhoneNumberValid(inputPhoneNumber);
+  const shouldShowInputPhoneNumberError =
+    isSubmitted && !isPhoneNumberValid(inputPhoneNumber);
 
   const shouldShowCityInputError = isSubmitted && !isCityValid;
-
 
   const ref0 = useRef<HTMLInputElement>(null);
   const ref1 = useRef<HTMLInputElement>(null);
@@ -57,7 +56,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
         currentMaxLength === getValue.length && nextRef?.current;
       const shouldGotoPrevRef = getValue.length === 0 && index !== 0;
       const newState = inputPhoneNumber.map((phoneInput, phoneInputIndex) =>
-        index === phoneInputIndex ? value.replace(/[^0-9]/g,'') : phoneInput
+        index === phoneInputIndex ? value.replace(/[^0-9]/g, "") : phoneInput
       ) as PhoneInputState;
       if (shouldGotoNextRef) {
         nextRef.current?.focus();
@@ -66,42 +65,39 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       if (shouldGotoPrevRef) {
         prevRef.current?.focus();
       }
-  
+
       setInputPhoneNumber(newState);
-      
     };
-
-
 
   return (
     <form
       onSubmit={(e) => {
-
-
         e.preventDefault();
-          if(!isCityValid||!inputFirstName||!isLastNameValid||!isPhoneNumberValid(inputPhoneNumber)||!isEmailValid(inputEmail)){
-            alert("Bad Input data")
-            setIsSubmitted(true)
-          }else{
-
-        setIsSubmitted(false)
-        getUserInformation({
-          firstName: capitalize(inputFirstName),
-          lastName: capitalize(inputLastName),
-          email: inputEmail,
-          city: capitalize(inputCity),
-          phone: formatPhoneNumber(inputPhoneNumber),
-        });
-        setInputFirstName("");
-        setInputLastName("");
-        setInputEmail("");
-        setInputCity("");
-        setInputPhoneNumber(["", "", "", ""]);
-          }
-      }
-    
-    
-    }
+        if (
+          !isCityValid ||
+          !inputFirstName ||
+          !isLastNameValid ||
+          !isPhoneNumberValid(inputPhoneNumber) ||
+          !isEmailValid(inputEmail)
+        ) {
+          alert("Bad Input data");
+          setIsSubmitted(true);
+        } else {
+          setIsSubmitted(false);
+          getUserInformation({
+            firstName: capitalize(inputFirstName),
+            lastName: capitalize(inputLastName),
+            email: inputEmail,
+            city: capitalize(inputCity),
+            phone: formatPhoneNumber(inputPhoneNumber),
+          });
+          setInputFirstName("");
+          setInputLastName("");
+          setInputEmail("");
+          setInputCity("");
+          setInputPhoneNumber(["", "", "", ""]);
+        }
+      }}
     >
       <u>
         <h3>User Information Form</h3>
@@ -111,6 +107,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       <div className="input-wrap">
         <label>{"First Name"}:</label>
         <input
+          type="text"
           placeholder="Bilbo"
           value={inputFirstName}
           onChange={({ target: { value } }) => {
@@ -127,6 +124,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       <div className="input-wrap">
         <label>{"Last Name"}:</label>
         <input
+          type="text"
           placeholder="Baggins"
           value={inputLastName}
           onChange={({ target: { value } }) => {
@@ -141,6 +139,7 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       <div className="input-wrap">
         <label>{"Email"}:</label>
         <input
+          type="text"
           placeholder="bilbo-baggins@adventurehobbits.net"
           value={inputEmail}
           onChange={({ target: { value } }) => {
@@ -155,14 +154,20 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       <div className="input-wrap">
         <label>{"City"}:</label>
         <input
+          type="text"
           placeholder="Hobbiton"
+          list="cities"
           value={inputCity}
           onChange={({ target: { value } }) => {
             setInputCity(value);
           }}
+          
         />
       </div>
-      {shouldShowCityInputError && <ErrorMessage message={cityErrorMessage} show={true} />}
+      
+      {shouldShowCityInputError && (
+        <ErrorMessage message={cityErrorMessage} show={true} />
+      )}
 
       <div className="input-wrap">
         <label htmlFor="phone">Phone:</label>
@@ -211,9 +216,8 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       {shouldShowInputPhoneNumberError && (
         <ErrorMessage message={phoneNumberErrorMessage} show={true} />
       )}
-    
-        <input type="submit" value="Submit"  />
- 
+
+      <input type="submit" value="Submit" />
     </form>
   );
 };
