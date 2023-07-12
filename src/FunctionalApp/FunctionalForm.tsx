@@ -1,4 +1,4 @@
-import { useState, ChangeEventHandler, useRef } from "react";
+import { useState } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { TSUserInfo, PhoneInputState } from "../types";
 import {
@@ -8,6 +8,7 @@ import {
   isFirstNameValid,
   isLastNameValid,
 } from "../utils/validations";
+import { FunctionalPhoneInput } from "./FunctionalPhoneInput";
 
 import {
   capitalize,
@@ -45,37 +46,13 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
 
   const shouldShowCityInputError = isSubmitted && !isCityValid(inputCity);
 
-  const ref0 = useRef<HTMLInputElement>(null);
-  const ref1 = useRef<HTMLInputElement>(null);
-  const ref2 = useRef<HTMLInputElement>(null);
-  const ref3 = useRef<HTMLInputElement>(null);
-  const refs = [ref0, ref1, ref2, ref3];
-
-  const createOnChangeHandler =
-    (index: 0 | 1 | 2 | 3): ChangeEventHandler<HTMLInputElement> =>
-    ({ target: { value } }) => {
-      const lengths = [2, 2, 2, 1];
-      const currentMaxLength = lengths[index];
-      const nextRef = refs[index + 1];
-      const prevRef = refs[index - 1];
-      const getValue = value;
-      const shouldGotoNextRef =
-        currentMaxLength === getValue.length && nextRef?.current;
-      const shouldGotoPrevRef = getValue.length === 0 && index !== 0;
-      const newState = inputPhoneNumber.map((phoneInput, phoneInputIndex) =>
-        index === phoneInputIndex ? value.replace(/[^0-9]/g, "") : phoneInput
-      ) as PhoneInputState;
-      if (shouldGotoNextRef) {
-        nextRef.current?.focus();
-      }
-
-      if (shouldGotoPrevRef) {
-        prevRef.current?.focus();
-      }
-
-      setInputPhoneNumber(newState);
-    };
-
+  const reset = () => {
+    setInputFirstName("");
+    setInputLastName("");
+    setInputEmail("");
+    setInputCity("");
+    setInputPhoneNumber(["", "", "", ""]);
+  };
   return (
     <form
       onSubmit={(e) => {
@@ -89,21 +66,17 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
         ) {
           alert("Bad Input data");
           setIsSubmitted(true);
-        } else {
-          setIsSubmitted(false);
-          getUserInformation({
-            firstName: capitalize(inputFirstName),
-            lastName: capitalize(inputLastName),
-            email: inputEmail,
-            city: capitalize(inputCity),
-            phone: formatPhoneNumber(inputPhoneNumber),
-          });
-          setInputFirstName("");
-          setInputLastName("");
-          setInputEmail("");
-          setInputCity("");
-          setInputPhoneNumber(["", "", "", ""]);
+          return;
         }
+        setIsSubmitted(false);
+        getUserInformation({
+          firstName: capitalize(inputFirstName),
+          lastName: capitalize(inputLastName),
+          email: inputEmail,
+          city: capitalize(inputCity),
+          phone: formatPhoneNumber(inputPhoneNumber),
+        });
+        reset();
       }}
     >
       <u>
@@ -111,122 +84,81 @@ export const FunctionalForm = ({ getUserInformation }: TSUserInfo) => {
       </u>
 
       {/* first name input */}
-      <div className="input-wrap">
-        <FunctionalInputProps
-          label={"First Name"}
-          inputProps={{
-            type: "text",
-            placeholder: "Bilbo",
-            value: inputFirstName,
-            onChange: ({ target: { value } }) => {
-              setInputFirstName(preventKeyingNumbers(value));
-            },
-          }}
-        />
-      </div>
+
+      <FunctionalInputProps
+        label={"First Name"}
+        inputProps={{
+          type: "text",
+          placeholder: "Bilbo",
+          value: inputFirstName,
+          onChange: ({ target: { value } }) => {
+            setInputFirstName(preventKeyingNumbers(value));
+          },
+        }}
+      />
 
       {shouldShowFirstNameError && (
         <ErrorMessage message={firstNameErrorMessage} show={true} />
       )}
 
       {/* last name input */}
-      <div className="input-wrap">
-        <FunctionalInputProps
-          label={"Last Name"}
-          inputProps={{
-            type: "text",
-            placeholder: "Baggins",
-            value: inputLastName,
-            onChange: ({ target: { value } }) => {
-              setInputLastName(value);
-            },
-          }}
-        />
-      </div>
+
+      <FunctionalInputProps
+        label={"Last Name"}
+        inputProps={{
+          type: "text",
+          placeholder: "Baggins",
+          value: inputLastName,
+          onChange: ({ target: { value } }) => {
+            setInputLastName(value);
+          },
+        }}
+      />
+
       {shouldShowLastNameError && (
         <ErrorMessage message={lastNameErrorMessage} show={true} />
       )}
       {/* Email Input */}
-      <div className="input-wrap">
-        <FunctionalInputProps
-          label={"Email"}
-          inputProps={{
-            type: "text",
-            placeholder: "Bilbo-baggins@adventurehobbits.net",
-            value: inputEmail,
-            onChange: ({ target: { value } }) => {
-              setInputEmail(value);
-            },
-          }}
-        />
-      </div>
+
+      <FunctionalInputProps
+        label={"Email"}
+        inputProps={{
+          type: "text",
+          placeholder: "Bilbo-baggins@adventurehobbits.net",
+          value: inputEmail,
+          onChange: ({ target: { value } }) => {
+            setInputEmail(value);
+          },
+        }}
+      />
+
       {shouldShowInputEmailError && (
         <ErrorMessage message={emailErrorMessage} show={true} />
       )}
       {/* City Input */}
-      <div className="input-wrap">
-        <FunctionalInputProps
-          label={"City"}
-          inputProps={{
-            type: "text",
-            placeholder: "Hobbiton",
-            value: inputCity,
-            list: "cities",
-            onChange: ({ target: { value } }) => {
-              setInputCity(preventKeyingNumbers(value));
-            },
-          }}
-        />
-      </div>
+
+      <FunctionalInputProps
+        label={"City"}
+        inputProps={{
+          type: "text",
+          placeholder: "Hobbiton",
+          value: inputCity,
+          list: "cities",
+          onChange: ({ target: { value } }) => {
+            setInputCity(preventKeyingNumbers(value));
+          },
+        }}
+      />
 
       {shouldShowCityInputError && (
         <ErrorMessage message={cityErrorMessage} show={true} />
       )}
 
-      <div className="input-wrap">
-        <label htmlFor="phone">Phone:</label>
-        <div id="phone-input-wrap">
-          <input
-            type="text"
-            id="phone-input-1"
-            placeholder="55"
-            value={inputPhoneNumber[0]}
-            onChange={createOnChangeHandler(0)}
-            ref={ref0}
-            maxLength={2}
-          />
-          -
-          <input
-            type="text"
-            id="phone-input-2"
-            placeholder="55"
-            value={inputPhoneNumber[1]}
-            onChange={createOnChangeHandler(1)}
-            ref={ref1}
-            maxLength={2}
-          />
-          -
-          <input
-            type="text"
-            id="phone-input-3"
-            placeholder="55"
-            value={inputPhoneNumber[2]}
-            onChange={createOnChangeHandler(2)}
-            ref={ref2}
-            maxLength={2}
-          />
-          -
-          <input
-            type="text"
-            id="phone-input-4"
-            placeholder="5"
-            value={inputPhoneNumber[3]}
-            onChange={createOnChangeHandler(3)}
-            ref={ref3}
-            maxLength={1}
-          />
-        </div>
-      </div>
+      <FunctionalPhoneInput
+        inputPhoneNumber={inputPhoneNumber}
+        setInputPhoneNumber={setInputPhoneNumber}
+      />
+
       {shouldShowInputPhoneNumberError && (
         <ErrorMessage message={phoneNumberErrorMessage} show={true} />
       )}

@@ -9,8 +9,10 @@ export const FunctionalInputProps = ({
 }) => {
   return (
     <>
-      <label>{label}: </label>
-      <input {...inputProps} />
+      <div className="input-wrap">
+        <label>{label}: </label>
+        <input {...inputProps} />
+      </div>
     </>
   );
 };

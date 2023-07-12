@@ -7,10 +7,9 @@ export function isEmailValid(emailAddress: string) {
   return !!emailAddress.match(regex);
 }
 export function isPhoneNumberValid(phoneNumber: string[]) {
-  const regex = /[a-zA-Z]/;
   const numberString = phoneNumber.join("");
 
-  return !regex.test(numberString) && numberString.length === 7;
+  return numberString.length === 7;
 }
 export function isCityValid(city: string) {
   return allCities.includes(capitalize(city));
